@@ -5,12 +5,15 @@ import me.waqe.plugin.events.JoinEvent
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
 import org.bukkit.Material
+import org.bukkit.NamespacedKey
 import org.bukkit.command.Command
 import org.bukkit.command.CommandSender
+import org.bukkit.enchantments.Enchantment
 import org.bukkit.entity.Player
 import org.bukkit.event.Listener
 import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.ItemStack
+import org.bukkit.inventory.ShapedRecipe
 import org.bukkit.plugin.java.JavaPlugin
 import org.bukkit.scheduler.BukkitRunnable
 import java.util.*
@@ -26,6 +29,8 @@ class App : JavaPlugin(), Listener {
         instance = this
         //this.reloadConfig()
         //this.saveDefaultConfig()
+        Bukkit.addRecipe(getRecipe())
+        Bukkit.addRecipe(getPickaxeRecipe())
 
         server.pluginManager.registerEvents(JoinEvent(this), this)
         getCommand("version")?.setExecutor(VersionCmd())
@@ -34,6 +39,34 @@ class App : JavaPlugin(), Listener {
 
     override fun onDisable() {
 
+    }
+
+    fun getRecipe() : ShapedRecipe {
+        val item = ItemStack(Material.NETHER_STAR)
+        val key = NamespacedKey(this, "nether_star")
+
+        val recipe = ShapedRecipe(key, item)
+        recipe.shape(" T ","TET"," T ")
+        recipe.setIngredient('T', Material.GHAST_TEAR)
+        recipe.setIngredient('E', Material.EMERALD_BLOCK)
+
+        return recipe
+    }
+
+    fun getPickaxeRecipe() : ShapedRecipe {
+        val item = ItemStack(Material.DIAMOND_PICKAXE)
+        val itemmeta = item.itemMeta
+        itemmeta?.addEnchant(Enchantment.DIG_SPEED, 5, true)
+        itemmeta?.setDisplayName("Ax-cess")
+        item.itemMeta = itemmeta
+        val key = NamespacedKey(this, "waqe")
+
+        val recipe = ShapedRecipe(key, item)
+        recipe.shape("EEE"," S "," S ")
+        recipe.setIngredient('S', Material.STICK)
+        recipe.setIngredient('E', Material.EMERALD_BLOCK)
+
+        return recipe
     }
 
     @SuppressWarnings
